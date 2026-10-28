@@ -10,4 +10,5 @@
 * A class obtains a `Logger` with `LogsCenter.getLogger(Class)`, which logs messages at the configured level.
 * Log messages are written to the console and a `.log` file.
 * The output logging level can be controlled by changing the `LOG_LEVEL` constant in the `LogsCenter` class.
+* **Don't log client details at `INFO` or above.** Those levels reach the log file, which keeps them after the client is deleted, so log command text and results at `FINE`.
 * **When choosing a level for a log message**, follow the conventions given in [_[se-edu/guides] Java: Logging conventions_](https://se-education.org/guides/conventions/java/logging.html).

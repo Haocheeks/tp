@@ -203,7 +203,7 @@ public class MainWindow extends UiPart<Stage> {
     private CommandResult executeCommand(String commandText) throws CommandException, ParseException {
         try {
             CommandResult commandResult = logic.execute(commandText);
-            logger.info("Result: " + commandResult.getFeedbackToUser());
+            logger.fine("Result: " + commandResult.getFeedbackToUser());
             if (commandResult.isEmptySearch()) {
                 resultDisplay.setEmptySearchToUser(commandResult.getFeedbackToUser());
             } else {
@@ -220,7 +220,7 @@ public class MainWindow extends UiPart<Stage> {
 
             return commandResult;
         } catch (CommandException | ParseException e) {
-            logger.info("An error occurred while executing command: " + commandText);
+            logger.fine("An error occurred while executing command: " + commandText);
             resultDisplay.setErrorToUser(e.getMessage());
             throw e;
         }

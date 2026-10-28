@@ -3,8 +3,19 @@ package seedu.address.ui;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static seedu.address.logic.commands.CommandTestUtil.ADDRESS_DESC_AMY;
+import static seedu.address.logic.commands.CommandTestUtil.EMAIL_DESC_AMY;
+import static seedu.address.logic.commands.CommandTestUtil.NAME_DESC_AMY;
+import static seedu.address.logic.commands.CommandTestUtil.PHONE_DESC_AMY;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_AMY;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +35,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import seedu.address.commons.core.LogsCenter;
 import seedu.address.logic.LogicManager;
+import seedu.address.logic.commands.AddCommand;
 import seedu.address.logic.commands.FindCommand;
 import seedu.address.logic.commands.ListCommand;
 import seedu.address.model.ModelManager;
@@ -104,6 +117,45 @@ public class MainWindowTest {
 
         assertTrue(getResultMessage().getText().startsWith("Invalid command format!"));
         assertTrue(getResultDisplay().getPseudoClassStates().contains(ERROR_PSEUDO_CLASS));
+    }
+
+    @Test
+    public void executeCommand_clientDetails_loggedBelowInfoOnly(FxRobot robot) {
+        List<LogRecord> records = new ArrayList<>();
+        Handler recordCollector = new Handler() {
+            @Override
+            public void publish(LogRecord logRecord) {
+                records.add(logRecord);
+            }
+
+            @Override
+            public void flush() {
+            }
+
+            @Override
+            public void close() {
+            }
+        };
+        // The parent of every LogsCenter logger; its level decides what reaches the log file
+        Logger baseLogger = LogsCenter.getLogger(MainWindowTest.class).getParent();
+        Level originalLevel = baseLogger.getLevel();
+        baseLogger.setLevel(Level.ALL);
+        baseLogger.addHandler(recordCollector);
+        try {
+            enterCommand(robot, AddCommand.COMMAND_WORD + NAME_DESC_AMY + PHONE_DESC_AMY + EMAIL_DESC_AMY
+                    + ADDRESS_DESC_AMY);
+            enterCommand(robot, AddCommand.COMMAND_WORD + NAME_DESC_AMY);
+        } finally {
+            baseLogger.removeHandler(recordCollector);
+            baseLogger.setLevel(originalLevel);
+        }
+
+        List<LogRecord> recordsWithName = records.stream()
+                .filter(logRecord -> logRecord.getMessage().contains(VALID_NAME_AMY))
+                .toList();
+        assertFalse(recordsWithName.isEmpty());
+        assertTrue(recordsWithName.stream()
+                .allMatch(logRecord -> logRecord.getLevel().intValue() < Level.INFO.intValue()));
     }
 
     @Test
