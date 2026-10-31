@@ -26,6 +26,7 @@ We are a team based in the [School of Computing, National University of Singapor
 [[github](https://github.com/Haocheeks)]
 
 * Role: Developer
+* Responsibilities: Undo and redo, command history, UI, input validation, releases
 
 ### Feng Yi
 <img src="images/jigusheng.png" width="200px">

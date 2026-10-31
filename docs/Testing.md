@@ -22,6 +22,11 @@ You can run tests in two ways.
 * **Method 2: Using Gradle**
   * Open a console and run the command `gradlew clean test` (Mac/Linux: `./gradlew clean test`)
 
+<box type="warning" seamless>
+
+**Caution:** UI tests use the real mouse and keyboard, so they may fail if you use the computer while they run. To run the tests without a window, run `set CI=true` and then `gradlew clean test` (Mac/Linux: `CI=true ./gradlew clean test`).
+</box>
+
 <box type="info" seamless>
 
 **Link**: Read [this Gradle Tutorial from the se-edu/guides](https://se-education.org/guides/tutorials/gradle.html) to learn more about using Gradle.
